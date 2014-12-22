@@ -1,0 +1,15 @@
+.ui.page.grid {
+	padding-left: 0;
+	padding-right: 0;
+	height: 100%;
+}
+
+.ui.grid > .column:not(.row), .ui.grid > .row > .column {
+	height: 100%;
+	padding-top: 20px;
+}
+
+.vscroll {
+     overflow-y: auto;
+     -webkit-overflow-scrolling: touch;
+ }

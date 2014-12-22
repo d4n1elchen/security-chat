@@ -1,0 +1,12 @@
+#content{
+	font-size: 14px;
+	position: relative;
+	width: 300px;
+	height: auto;
+	margin: 0 auto;
+	padding-top: 100px;
+}
+
+#content .submit_button{
+	text-align: right;
+}
