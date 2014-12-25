@@ -6,7 +6,6 @@
 
 .ui.grid > .column:not(.row), .ui.grid > .row > .column {
 	height: 100%;
-	padding-top: 20px;
 }
 
 .vscroll {

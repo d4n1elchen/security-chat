@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	<title>Secure Chatting</title>
+	
+	<link rel="stylesheet" type="text/css" href="dist/semantic.css">
+	<script src="dist/semantic.min.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="css/index.css">
+</head>
+<body>
+	<div class="ui top attached tabular menu">
+	  <a class="active item" data-tab="first">First</a>
+	  <a class="item" data-tab="second">Second</a>
+	  <a class="item" data-tab="third">Third</a>
+	</div>
+	<div class="ui bottom attached active tab segment" data-tab="first">
+	  First
+	</div>
+	<div class="ui bottom attached tab segment" data-tab="second">
+	  Second
+	</div>
+	<div class="ui bottom attached tab segment" data-tab="third">
+	  Third
+	</div>
+	<script type="text/javascript">
+		$('.menu .item')
+  			.tab()
+		;
+	</script>
+</body>
