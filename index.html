@@ -7,7 +7,10 @@
 	<title>Secure Chatting</title>
 	
 	<link rel="stylesheet" type="text/css" href="dist/semantic.css">
-	<script src="dist/semantic.js"></script>
+	<script src="js/jquery-2.1.3.min.js"></script>
+	<script src="dist/semantic.min.js"></script>
+	<script src="js/addtab.js"></script>
+	<script src="js/jquery.semantictabs.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="css/index.css">
 </head>
@@ -38,13 +41,16 @@
 				</div>
 			  </div>
 			  <div class="ui vertical segment vscroll" style="height:85%">
-			    <div class="ui divided items">
+			    <div id="friends" class="ui divided items">
 				  <div class="item">
 				    <div class="ui tiny image">
 				      <img src="images/image.png">
 				    </div>
 				    <div class="middle aligned content">
-				      <a class="header">Alice</a>
+				      <a class="header">Alice</a>				      
+				      <div class="meta">
+				        <a class="cinema">remove this friend</a>
+				      </div>
 				    </div>
 				  </div>
 				  <div class="item">
@@ -52,7 +58,10 @@
 				      <img src="images/image.png">
 				    </div>
 				    <div class="middle aligned content">
-				      <a class="header">Bob</a>
+				      <a class="header">Bob</a>				      
+				      <div class="meta">
+				        <a class="cinema">remove this friend</a>
+				      </div>
 				    </div>
 				  </div>
 				  <div class="item">
@@ -60,7 +69,10 @@
 				      <img src="images/image.png">
 				    </div>
 				    <div class="middle aligned content">
-				      <a class="header">Friend3</a>
+				      <a class="header">Friend3</a>				      
+				      <div class="meta">
+				        <a class="cinema">remove this friend</a>
+				      </div>
 				    </div>
 				  </div>
 				  <div class="item">
@@ -68,7 +80,10 @@
 				      <img src="images/image.png">
 				    </div>
 				    <div class="middle aligned content">
-				      <a class="header">Friend4</a>
+				      <a class="header">Friend4</a>				      
+				      <div class="meta">
+				        <a class="cinema">remove this friend</a>
+				      </div>
 				    </div>
 				  </div>
 				  <div class="item">
@@ -76,7 +91,10 @@
 				      <img src="images/image.png">
 				    </div>
 				    <div class="middle aligned content">
-				      <a class="header">Friend5</a>
+				      <a class="header">Friend5</a>				      
+				      <div class="meta">
+				        <a class="cinema">remove this friend</a>
+				      </div>
 				    </div>
 				  </div>
 				  <div class="item">
@@ -84,7 +102,10 @@
 				      <img src="images/image.png">
 				    </div>
 				    <div class="middle aligned content">
-				      <a class="header">Friend6</a>
+				      <a class="header">Friend6</a>				      
+				      <div class="meta">
+				        <a class="cinema">remove this friend</a>
+				      </div>
 				    </div>
 				  </div>
 				  <div class="item">
@@ -92,7 +113,10 @@
 				      <img src="images/image.png">
 				    </div>
 				    <div class="middle aligned content">
-				      <a class="header">Friend7</a>
+				      <a class="header">Friend7</a>				      
+				      <div class="meta">
+				        <a class="cinema">remove this friend</a>
+				      </div>
 				    </div>
 				  </div>
 				  <div class="item">
@@ -100,29 +124,18 @@
 				      <img src="images/image.png">
 				    </div>
 				    <div class="middle aligned content">
-				      <a class="header">Friend8</a>
+				      <a class="header">Friend8</a>				      
+				      <div class="meta">
+				        <a class="cinema">remove this friend</a>
+				      </div>
 				    </div>
 				  </div>
 				</div>
 			  </div>
 			</div>
 	    </div>
-		<div class="twelve wide column" style="padding-top: 20px;padding-bottom: 30px;">
-		  	<div class="ui top attached tabular menu">
-			  <a class="active item" data-tab="first">First</a>
-			  <a class="item" data-tab="second">Second</a>
-			  <a class="item" data-tab="third">Third</a>
-			</div>
-			<div class="ui bottom attached active tab segment" data-tab="first">
-			  <div class="ui aligned vertical segment">
-			    聊天內容
-			  </div>
-			  <div class="ui aligned vertical segment">
-				<div class="ui fluid action input">
-				  <input type="text" placeholder="Talking to your friend...">
-				  <div class="ui button">Submit</div>
-				</div>
-			  </div>
+		<div id="chating" class="twelve wide column" style="padding-top: 20px;padding-bottom: 30px;">
+		  	<div id="tabs" class="ui top attached tabular menu">
 			</div>
 			
 		</div>
@@ -131,6 +144,16 @@
 		$('.menu .item')
 		  .tab()
 		;
+	</script>
+	<script type="text/javascript">
+		var now = 0;
+
+		$('#friends .header').click(function(){
+		  //alert($(this).text());
+		  now++;
+		  if(now>5){ removetab(1); now--;}
+		  addtab($(this).text().trim(),now);
+		});
 	</script>
 	<div class="ui fixed inverted teal bottom menu">\
 		<div class="title item">
