@@ -1,5 +1,5 @@
 var supported = false, validFile = false, validHash = false;
-var uid = null, hashedPK = null, pk = null, uidArr = null;
+var uid = null, hashedPK = null, pk = null, uidArr = null, sk = null;
 
 if(window.File && window.FileReader && window.FileList && window.Blob && window.crypto && window.crypto.subtle)
 	supported = true;
@@ -72,7 +72,8 @@ function getSK(result){
 	var xhr = new XMLHttpRequest();
 	xhr.onload = function(evt){
 		if(this.status == 200){	//success
-			var sk = "", skBuf = new ArrayBuffer(32), skArr = new Uint8Array(skBuf);
+			sk = "";
+			var skBuf = new ArrayBuffer(32), skArr = new Uint8Array(skBuf);
 			try{
 				sk = window.atob(this.response);//base64 to ascii
 				if(sk.length != 32)
@@ -113,9 +114,16 @@ function getSK(result){
 
 function submitToken(token){
 	var xhr = new XMLHttpRequest();
-	xhr.onload = function(){
+	xhr.onload = function(evt){
+		if(this.status == 200){
+			sessionStorage.setItem("sk",sk);
+			window.location = window.location.origin;
+		}else if(this.status == 500)
+			alert("Internal Server Error! Please Notify Administrator!\n"+this.response);
+		else alert("Unknown Error has occurred!\n"+this.response);
 	}
 	xhr.open('POST','/login',true);
+	xhr.setRequestHeader('Content-Type','application/octet-stream');
 	xhr.send(token);
 	console.log(token);
 }
