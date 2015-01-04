@@ -1,5 +1,5 @@
 var supported = false, validFile = false, validHash = false;
-var uid = null, hashedPK = null, pk = null;
+var uid = null, hashedPK = null, pk = null, uidArr = null;
 
 if(window.File && window.FileReader && window.FileList && window.Blob && window.crypto && window.crypto.subtle)
 	supported = true;
@@ -38,11 +38,12 @@ function getHash(pw,cb){
 	validHash = false;
 	if(!supported || !validFile || uid.length != 64 || hashedPK.length != 32)
 		cb(null);
-	var arrBuf = new ArrayBuffer(32+pw.length), intArr = new Uint8Array(arrBuf), i = 0;
+	var arrBuf = new ArrayBuffer(32+pw.length), i = 0;
+	uidArr = new Uint8Array(arrBuf);
 	for( ; i < 32 ; i++)
-		intArr[i] = parseInt(uid.substr(i<<1,2),16);
-	for( ; i < intArr.length ; i++)
-		intArr[i] = pw.charCodeAt(i-32);
+		uidArr[i] = parseInt(uid.substr(i<<1,2),16);
+	for( ; i < uidArr.length ; i++)
+		uidArr[i] = pw.charCodeAt(i-32);
 	crypto.subtle.digest('SHA-256',arrBuf).then(function(hash){
 		if(hash.byteLength != 32)	//sha-256 have 32B result
 			return cb(null);
@@ -55,7 +56,6 @@ function getHash(pw,cb){
 		pk = "";
 		for(var i = 0 ; i < pkArr.length ; i++)
 			pk +=  ('0'+pkArr[i].toString(16)).slice(-2);
-		console.log('pk: '+pk);
 		validHash = true;
 		cb(pk);
 	},function(err){
@@ -69,8 +69,55 @@ function getSK(result){
 		alert('Invalid card/password! Try again!');
 		return;
 	}
-	//http request localhost/getSK?uid={uid}&pk={pk}
-	//if got SK != "" and SK != null, then login successful else login fail
+	var xhr = new XMLHttpRequest();
+	xhr.onload = function(evt){
+		if(this.status == 200){	//success
+			var sk = "", skBuf = new ArrayBuffer(32), skArr = new Uint8Array(skBuf);
+			try{
+				sk = window.atob(this.response);//base64 to ascii
+				if(sk.length != 32)
+					throw new Error("Invalid Base64 data!");
+			}catch(err){
+				alert("Unexpected response received!\n"+this.response);
+				return;
+			}
+			for(var i = 0 ; i < sk.length ; i++)
+				skArr[i] = sk.charCodeAt(i);
+			crypto.subtle.digest('SHA-256',skBuf).then(function(hash){
+				if(hash.byteLength != 32)	//sha-256 have 32B result
+					return;
+				var packBuf = new ArrayBuffer(64), token = new Uint8Array(packBuf), hArr = new Uint8Array(hash), i = 0;
+				for( ; i < 32 ; i++)
+					token[i] = uidArr[i];
+				for( ; i < 64 ; i++)
+					token[i] = hArr[i-32];
+				submitToken(token);
+			},function(err){
+				console.log('Hash failed, reason: '+err);
+				cb(null);
+			});
+		}else if(this.status == 401)
+			alert("Invalid Private Key is provided! Details:\n"+this.response);
+		else if(this.status == 400)
+			alert("Invalid data is provided! Details:\n"+this.response);
+		else alert("Unknown Error has occured, response:\n"+this.response);
+	}
+	xhr.onerror = function(evt){
+		alert("Error: "+evt);
+		console.log(evt);
+	}
+	xhr.open('GET','http://localhost:8000/getkey?userid='+uid+'&privatekey='+pk,true);
+	console.log('Sending request: '+'http://localhost:8000/getkey?userid='+uid+'&privatekey='+pk);
+	xhr.send();
+}
+
+function submitToken(token){
+	var xhr = new XMLHttpRequest();
+	xhr.onload = function(){
+	}
+	xhr.open('POST','/login',true);
+	xhr.send(token);
+	console.log(token);
 }
 
 function login(){
